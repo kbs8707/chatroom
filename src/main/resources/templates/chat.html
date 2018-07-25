@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="eng" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script th:src="@{/thirdparty/jquery-3.1.1.js}"></script>
+    <script th:src="@{/thirdparty/bootstrap.min.js}"></script>
+
+    <link rel="stylesheet" th:href="@{/thirdparty/bootstrap.min.css}">
+
+    <script th:src="@{/chat.js}"></script>
+    <style>
+        .panel-group {
+            height: 500px;
+            width: 1100px;
+            border-style: ridge;
+            border-radius: 10px;
+            overflow-y: scroll;
+            display: flex;
+            flex-direction: column-reverse;
+        }
+        .panel {
+            overflow-wrap: break-word;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="panel-group">
+        <div id="message">
+
+        </div>
+    </div>
+    <div class="form-group">
+        <textarea id="msg" class="form-control" name="msg" placeholder="Message"></textarea>
+        <button class="btn" id="send">Send</button>
+    </div>
+</div>
+
+</body>
+</html>
