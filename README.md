@@ -1,16 +1,20 @@
 # chatroom
 
-chatroom built using websocket
+chat room built using websocket
 
 This is an experiment project with the websocket protocol.
 
 Tools used:
-<ul>-Spring Boot</ul>
-<ul>-Thymeleaf</ul>
-<ul>-JQuery</ul>
-<ul>-Bootstrap</ul>
+<ul>
+<li>Spring Boot</li>
+<li>JQuery</li>
+<li>Bootstrap</li>
+</ul>
 
 TODO
-<ul>-Support private chat</ul>
-<ul>-Display all online users</ul>
-<ul>-Set up filters</ul>
+<ul>
+<li>Separate own message from others</li>
+<li>Support private messaging</li>
+<li>Set up filters</li>
+<li>Use thymeleaf for templating</li>
+</ul>

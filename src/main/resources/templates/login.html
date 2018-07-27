@@ -25,13 +25,13 @@
 
 <div>
     <div class="container" style="margin-top: 200px;">
-        <form class="col-sm-offset-4col-sm-4 col-sm-offset-4 form form-horizontal " action="/chatroom" method="post"
+        <form class="col-sm-offset-4col-sm-4 col-sm-offset-4 form form-horizontal " th:action="@{/chatroom}" method="post"
               id="login_form">
             <h3 class="text-center">Please enter an username</h3>
             <div class="form-group">
                 <label for="username" class="col-sm-2 control-label">Username</label>
                 <div class="col-sm-10">
-                    <input type="text" class="form-control" id="username" name="username" placeholder="Username">
+                    <input type="text" class="form-control" id="username" name="username" placeholder="Username" autofocus>
                 </div>
             </div>
             <button type="submit" class="btn btn-success center-block">Submit</button>

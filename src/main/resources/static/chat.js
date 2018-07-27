@@ -1,6 +1,7 @@
 $(function () {
     var username = "";
-    debugger;
+
+    //Get username from session
     $.ajax({
         type: "POST",
         url:"/userinfo",
@@ -10,7 +11,7 @@ $(function () {
             username = result;
         },
         error: function () {
-            alert("error");
+            username = "default";
         }
     });
 
@@ -62,6 +63,18 @@ $(function () {
             "<div class='panel-body'>" + message + "</div>" +
             "</div>";
         $("#message").append(response);
+
+        if (data.userList != null) {
+            var userList = JSON.parse(data.userList);
+            var list = "";
+            for (var user in userList) {
+                if (userList.hasOwnProperty(user)) {
+                    list +=
+                        "<li><span id='"+ user +"'>"+ userList[user] +"</span></li>"
+                }
+                $("#userList").html(list);
+            }
+        }
     }
 });
 

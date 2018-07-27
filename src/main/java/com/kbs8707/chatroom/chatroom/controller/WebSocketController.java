@@ -1,6 +1,7 @@
 package com.kbs8707.chatroom.chatroom.controller;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.CopyOnWriteArraySet;
 
 import javax.websocket.OnClose;
@@ -13,15 +14,21 @@ import javax.websocket.server.ServerEndpoint;
 
 import com.google.gson.Gson;
 import com.kbs8707.chatroom.chatroom.entity.MessageEntity;
+import com.kbs8707.chatroom.chatroom.entity.SystemEntity;
+import com.kbs8707.chatroom.chatroom.util.StringUtil;
 import org.springframework.stereotype.Component;
 
 @ServerEndpoint(value = "/websocket/{username}")
 @Component
 public class WebSocketController {
     private static int onlineCount = 0;
+    //Set for connected sessions
     private static CopyOnWriteArraySet<WebSocketController> webSocketSet = new CopyOnWriteArraySet<>();
+
     private static HashMap<String, String> users = new HashMap<>();
     private Session session;
+    private MessageEntity mesEnt = new MessageEntity();
+    private SystemEntity sysEnt = new SystemEntity();
 
     @OnOpen
     public void OnOpen(Session session, @PathParam("username") String username) {
@@ -30,10 +37,15 @@ public class WebSocketController {
         webSocketSet.add(this);
         users.put(session.getId(), username);
 
-        String message = users.get(session.getId()) + " has entered the room, current users: " + getOnlineCount();
-        MessageEntity mesEnt = new MessageEntity("System", message);
+        String userList = StringUtil.mapToString(users);
+        String message = users.get(session.getId()) + " has entered the room, current users: " + userList;
+
         Gson json = new Gson();
-        String output = json.toJson(mesEnt);
+        sysEnt.setUserName("System");
+        sysEnt.setMessage(message);
+        sysEnt.setUserList(json.toJson(users));
+
+        String output = json.toJson(sysEnt);
 
         for (WebSocketController s : webSocketSet) {
             try {
@@ -47,13 +59,20 @@ public class WebSocketController {
     @OnClose
     public void onClose(Session session) {
         this.session = session;
+        String leavingUser = users.get(session.getId());
         subOnlineCount();
         webSocketSet.remove(this);
+        users.remove(session.getId());
 
-        String message = users.get(session.getId()) + " has left the room, current users: " + getOnlineCount();
-        MessageEntity mesEnt = new MessageEntity("System", message);
+        String userList = StringUtil.mapToString(users);
+        String message = leavingUser + " has left the room, current users: " + userList;
+
         Gson json = new Gson();
-        String output = json.toJson(mesEnt);
+        sysEnt.setUserName("System");
+        sysEnt.setMessage(message);
+        sysEnt.setUserList(json.toJson(users));
+
+        String output = json.toJson(sysEnt);
 
         for (WebSocketController s : webSocketSet) {
             if (s.session != session) {
@@ -68,7 +87,8 @@ public class WebSocketController {
 
     @OnMessage
     public void onMessage(String message, Session session) {
-        MessageEntity mesEnt = new MessageEntity(users.get(session.getId()), message);
+        mesEnt.setUserName(users.get(session.getId()));
+        mesEnt.setMessage(message);
         Gson json = new Gson();
 
         String output = json.toJson(mesEnt);
